@@ -3,7 +3,11 @@
 
  - https://blog.codeship.com/getting-started-with-kubernetes/
 
+### Playgrounds
 
+  - Play with K8S: http://labs.play-with-k8s.com/
+
+  - Katacoda: (courses) https://www.katacoda.com/courses/kubernetes/playground
 
 ### Install options:
 https://kubernetes.io/docs/setup/
