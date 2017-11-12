@@ -12,6 +12,8 @@
 ### Install options:
 https://kubernetes.io/docs/setup/
 
+For a quick-start guide to installing a K8S cluster on AWS using `kops`, and then deploying the voting app, see this [readme](/kops_install.md)
+
 ### Install minikube on a ubuntu host.
 
 Requires docker to be pre installed, sets up a single node cluster on the host, no extra VMs started (besides the one the host may run on):
