@@ -60,16 +60,16 @@ Examine/edit the resulting configs:
 * edit node instance group (**e.g., to change node count**): `kops edit ig --name=k8s-sq.k8s.local nodes`
 * edit master instance group: `kops edit ig --name=k8s-sq.k8s.local master-us-west-2`
 
-Build (creat/deploy) the cluster:  `kops update cluster k8s-sq.k8s.local --yes`
+Build (create/deploy) the cluster:  `kops update cluster k8s-sq.k8s.local --yes`
 
 Verify the cluster:
 
 * `kubectl get nodes` (verify K8S simple api call)
 * `kubectl cluster-info`
-* `kops validate cluster` (verify cluster working)
+* `kops validate cluster --state s3://skopos-io-k8s-state-store` (verify cluster working)
 * `kubectl -n kube-system get po` (list system components)
 
-Untaint the master node (get the node name and view the existing taint using ``kubectl describe nodes`) so that objects may be deployed to it (if desired, or if creating a single node K8S cluster):
+Untaint the master node (get the node name and view the existing taint using `kubectl describe nodes`) so that objects may be deployed to it (if desired, or if creating a single node K8S cluster):
 ```
 kubectl taint node ip-172-20-32-20.us-west-2.compute.internal node-role.kubernetes.io/master:NoSchedule-
 ```
@@ -84,3 +84,28 @@ On AWS this will create a classic LB for each externally exposed K8S service (vo
 
 * LBs must have K8S master/node instance(s) added manually (before then, you get an empty result from the LB ingress)
 * K8S cluster must have a security group which provides access to EACH LB on the service external port -- whatever is assigned by K8S, e.g. `8080:32216/TCP`
+
+### Update K8S Cluster using `kops`
+
+See:  https://github.com/kubernetes/kops/blob/master/docs/upgrade.md
+
+Tested:
+```
+# edit the kops cluster spec and set "kubernetesVersion: 1.8.3"
+kops edit cluster k8s-sq.k8s.local --state s3://skopos-io-k8s-state-store
+
+# preview upgrade
+kops update cluster k8s-sq.k8s.local --state s3://skopos-io-k8s-state-store
+
+# perform upgrade
+kops update cluster k8s-sq.k8s.local --state s3://skopos-io-k8s-state-store --yes
+
+kops rolling-update cluster k8s-sq.k8s.local --state s3://skopos-io-k8s-state-store
+
+kops rolling-update cluster k8s-sq.k8s.local --state s3://skopos-io-k8s-state-store --yes
+
+# As desired, untaint the (new) master node
+# note: rolling-update replaces this VM - you may need to add any custom
+# security group from the previous node(s) to the new node(s)
+kubectl taint node ip-172-20-51-0.us-west-2.compute.internal node-role.kubernetes.io/master:NoSchedule-
+```
