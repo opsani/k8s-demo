@@ -16,9 +16,9 @@ Notes:
 
 ### Quick Start
 
-Install kops:
+Install kops (use the most recent 1.8.0-beta.1 for k8s v1.8.x support):
 ```
-wget -O kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+wget -O kops https://github.com/kubernetes/kops/releases/download/1.8.0-beta.1/kops-linux-amd64
 chmod +x ./kops
 sudo mv ./kops /usr/local/bin/
 ```
@@ -91,7 +91,7 @@ See:  https://github.com/kubernetes/kops/blob/master/docs/upgrade.md
 
 Tested:
 ```
-# edit the kops cluster spec and set "kubernetesVersion: 1.8.3"
+# edit the kops cluster spec and set "kubernetesVersion: 1.8.3" (for example)
 kops edit cluster k8s-sq.k8s.local --state s3://skopos-io-k8s-state-store
 
 # preview upgrade
